@@ -42,6 +42,7 @@ interface GradientBlindsProps {
   distortAmount?: number;
   shineDirection?: 'left' | 'right';
   mixBlendMode?: string;
+  animationSpeed?: number;
 }
 
 const GradientBlinds = ({
@@ -61,6 +62,7 @@ const GradientBlinds = ({
   distortAmount = 0,
   shineDirection = 'left',
   mixBlendMode = 'lighten',
+  animationSpeed = 0.2,
 }: GradientBlindsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
@@ -116,6 +118,7 @@ uniform float uSpotlightOpacity;
 uniform float uMirror;
 uniform float uDistort;
 uniform float uShineFlip;
+uniform float uAnimationSpeed;
 uniform vec3  uColor0;
 uniform vec3  uColor1;
 uniform vec3  uColor2;
@@ -161,6 +164,7 @@ vec3 getGradientColor(float t){
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord){
   vec2 uv0 = fragCoord.xy / iResolution.xy;
+  float timeShift = iTime * uAnimationSpeed;
   float aspect = iResolution.x / iResolution.y;
   vec2 p = uv0 * 2.0 - 1.0;
   p.x *= aspect;
@@ -175,7 +179,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
     uvMod.x += sin(a) * w;
     uvMod.y += cos(b) * w;
   }
-  float t = uvMod.x;
+  float t = uvMod.x + timeShift;
   if (uMirror > 0.5) { t = 1.0 - abs(1.0 - 2.0 * fract(t)); }
   vec3 base = getGradientColor(t);
   vec2 offset = vec2(iMouse.x/iResolution.x, iMouse.y/iResolution.y);
@@ -184,7 +188,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
   float dn = d / r;
   float spot = (1.0 - 2.0 * pow(dn, uSpotlightSoftness)) * uSpotlightOpacity;
   vec3 cir = vec3(spot);
-  float stripe = fract(uvMod.x * max(uBlindCount, 1.0));
+  float stripe = fract((uvMod.x + (timeShift * 0.65)) * max(uBlindCount, 1.0));
   if (uShineFlip > 0.5) stripe = 1.0 - stripe;
   vec3 ran = vec3(stripe);
   vec3 col = cir + base - ran;
@@ -212,6 +216,7 @@ void main(){
       uMirror: { value: mirrorGradient ? 1 : 0 },
       uDistort: { value: distortAmount },
       uShineFlip: { value: shineDirection === 'right' ? 1 : 0 },
+      uAnimationSpeed: { value: Math.max(0, animationSpeed) },
       uColor0: { value: colorArr[0] },
       uColor1: { value: colorArr[1] },
       uColor2: { value: colorArr[2] },
@@ -306,7 +311,7 @@ void main(){
       meshRef.current = null;
       rendererRef.current = null;
     };
-  }, [dpr, paused, gradientColors, angle, noise, blindCount, blindMinWidth, mouseDampening, mirrorGradient, spotlightRadius, spotlightSoftness, spotlightOpacity, distortAmount, shineDirection]);
+  }, [dpr, paused, gradientColors, angle, noise, blindCount, blindMinWidth, mouseDampening, mirrorGradient, spotlightRadius, spotlightSoftness, spotlightOpacity, distortAmount, shineDirection, animationSpeed]);
 
   return (
     <div

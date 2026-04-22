@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --app --eslint --no-git --import-alias '@/*' --skip-install)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --eslint --no-git --import-alias '@/*' --skip-install)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const s = require\\('stripe'\\); console.log\\(Object.keys\\(s\\).slice\\(0,3\\)\\); const pkg = require\\('./node_modules/stripe/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(node -e \"const s = require\\('stripe'\\); console.log\\(s.API_VERSION\\)\")",
+      "Bash(npm run *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git commit -m ' *)",
+      "Bash(gh auth *)",
+      "Bash(where gh *)",
+      "Read(//c/Program Files/GitHub CLI/**)"
     ]
   }
 }

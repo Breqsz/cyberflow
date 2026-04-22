@@ -1,74 +1,58 @@
 'use client';
 
 import { Badge } from '@/components/ui/Badge';
-
-const steps = [
-  {
-    number: '01',
-    title: 'Diagnóstico',
-    description:
-      'Analisamos sua presença atual, concorrentes e oportunidades. Identificamos os gaps que estão travando seu crescimento.',
-    color: '#6c3aff',
-  },
-  {
-    number: '02',
-    title: 'Estratégia',
-    description:
-      'Montamos um plano personalizado: arquitetura de funil, identidade visual, copy e metas de conversão claras.',
-    color: '#8b5cf6',
-  },
-  {
-    number: '03',
-    title: 'Execução',
-    description:
-      'Desenvolvemos e lançamos sua presença digital com velocidade. Sites rápidos, responsivos e otimizados para converter.',
-    color: '#a47aff',
-  },
-  {
-    number: '04',
-    title: 'Escala',
-    description:
-      'Acompanhamos métricas, iteramos e expandimos. Sua presença evolui junto com seu negócio, sem precisar começar do zero.',
-    color: '#00d4ff',
-  },
-];
+import { useLang } from '@/components/providers/LanguageProvider';
+import { content, t, tArr } from '@/lib/i18n/content';
 
 export const HowItWorks = () => {
+  const { lang } = useLang();
+  const c = content.howItWorks;
+  const steps = tArr(c.steps, lang);
+
   return (
-    <section id="how-it-works" className="py-24 bg-[#050510]">
+    <section id="how-it-works" className="py-28 bg-[#050510] relative">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <Badge variant="primary" className="mb-4">Como funciona</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Do diagnóstico à{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6c3aff] to-[#00d4ff]">
-              escala real
-            </span>
+          <Badge variant="surface" className="mb-5">{t(c.badge, lang)}</Badge>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">
+            {t(c.headline, lang)}
           </h2>
-          <p className="text-[#f0f0ff]/50 text-lg max-w-2xl mx-auto">
-            Um processo direto, sem enrolação, focado em resultado.
-          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-          {/* connector line desktop */}
-          <div className="hidden lg:block absolute top-14 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-[#6c3aff] via-[#a47aff] to-[#00d4ff] opacity-30" />
+          {/* desktop connector */}
+          <div className="hidden lg:block absolute top-[52px] left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-px">
+            <div className="h-full bg-gradient-to-r from-[#6c3aff] via-[#a47aff] to-[#00d4ff] opacity-20" />
+          </div>
 
           {steps.map((step, i) => (
-            <div key={step.number} className="group relative">
-              <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-7 hover:border-white/10 transition-all duration-300 hover:-translate-y-1 h-full">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-sm font-bold font-mono"
-                  style={{ background: `${step.color}20`, color: step.color, border: `1px solid ${step.color}30` }}
-                >
-                  {step.number}
+            <div key={step.n} className="relative flex flex-col gap-4">
+              <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-7 hover:border-white/10 transition-all duration-300 flex-1">
+                {/* step number */}
+                <div className="w-12 h-12 rounded-xl bg-[#6c3aff]/15 border border-[#6c3aff]/20 flex items-center justify-center mb-5">
+                  <span className="text-sm font-mono font-bold text-[#6c3aff]">{step.n}</span>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-3">{step.title}</h3>
-                <p className="text-[#f0f0ff]/50 text-sm leading-relaxed">{step.description}</p>
+
+                <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-[#f0f0ff]/45 text-sm leading-relaxed mb-5">{step.body}</p>
+
+                {/* deliverables */}
+                <div className="border-t border-white/5 pt-4 space-y-2">
+                  {step.deliverables.map((d) => (
+                    <div key={d} className="flex items-start gap-2 text-xs">
+                      <span className="text-[#6c3aff] mt-0.5 shrink-0">→</span>
+                      <span className="text-[#f0f0ff]/55">{d}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* mobile connector */}
               {i < steps.length - 1 && (
-                <div className="lg:hidden flex justify-center my-2">
-                  <div className="w-px h-6 bg-gradient-to-b from-[#6c3aff] to-transparent" />
+                <div className="lg:hidden flex justify-center">
+                  <div className="w-px h-5 bg-gradient-to-b from-[#6c3aff]/40 to-transparent" />
                 </div>
               )}
             </div>
