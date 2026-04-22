@@ -12,8 +12,79 @@ const accentByPlan: Record<string, string> = {
   onetime: '#a47aff',
 };
 
+const pricingModel = {
+  starter: {
+    enTitle: 'Launch',
+    ptTitle: 'Launch',
+    ranges: {
+      USD: '$39 - $69',
+      EUR: '€35 - €65',
+      GBP: '£29 - £59',
+      BRL: 'R$197 - R$297',
+    },
+    sweetSpot: {
+      USD: '$49',
+      EUR: '€49',
+      GBP: '£39',
+      BRL: 'R$247',
+    },
+    period: { en: '/ month', pt: '/ mês' },
+  },
+  growth: {
+    enTitle: 'Scale',
+    ptTitle: 'Scale',
+    ranges: {
+      USD: '$99 - $179',
+      EUR: '€95 - €169',
+      GBP: '£79 - £149',
+      BRL: 'R$397 - R$597',
+    },
+    sweetSpot: {
+      USD: '$149',
+      EUR: '€139',
+      GBP: '£119',
+      BRL: 'R$497',
+    },
+    period: { en: '/ month', pt: '/ mês' },
+  },
+  pro: {
+    enTitle: 'Dominate',
+    ptTitle: 'Dominate',
+    ranges: {
+      USD: '$249 - $499',
+      EUR: '€229 - €459',
+      GBP: '£199 - £399',
+      BRL: 'R$897 - R$1.497',
+    },
+    sweetSpot: {
+      USD: '$299',
+      EUR: '€279',
+      GBP: '£249',
+      BRL: 'R$997',
+    },
+    period: { en: '/ month', pt: '/ mês' },
+  },
+  onetime: {
+    enTitle: 'Launch Project',
+    ptTitle: 'Launch Project',
+    ranges: {
+      USD: '$250 - $800',
+      EUR: '€230 - €750',
+      GBP: '£199 - £699',
+      BRL: 'R$1.297 - R$3.497',
+    },
+    sweetSpot: {
+      USD: '$300 / $500 / $800',
+      EUR: '€300 / €500 / €800',
+      GBP: '£300 / £500 / £800',
+      BRL: 'R$1.297 / R$2.197 / R$3.497',
+    },
+    period: { en: 'one-time', pt: 'pagamento único' },
+  },
+} as const;
+
 export const Plans = () => {
-  const { lang } = useLang();
+  const { lang, currency } = useLang();
   const c = content.plans;
   const items = tArr(c.items, lang);
 
@@ -59,10 +130,20 @@ export const Plans = () => {
 
                 <div className="mb-6">
                   <p className="text-xs font-mono text-[#f0f0ff]/30 uppercase tracking-widest mb-3">{plan.name}</p>
+                  <p className="text-[11px] font-semibold text-[#00d4ff] uppercase tracking-[0.18em] mb-2">
+                    {lang === 'pt' ? pricingModel[plan.id as keyof typeof pricingModel].ptTitle : pricingModel[plan.id as keyof typeof pricingModel].enTitle}
+                  </p>
                   <div className="flex items-baseline gap-1.5 mb-3">
-                    <span className="text-3xl font-bold text-white">{plan.price}</span>
-                    <span className="text-[#f0f0ff]/35 text-sm">{plan.period}</span>
+                    <span className="text-3xl font-bold text-white">
+                      {pricingModel[plan.id as keyof typeof pricingModel].sweetSpot[currency]}
+                    </span>
+                    <span className="text-[#f0f0ff]/35 text-sm">
+                      {pricingModel[plan.id as keyof typeof pricingModel].period[lang]}
+                    </span>
                   </div>
+                  <p className="text-[11px] text-[#f0f0ff]/35 mb-2">
+                    {lang === 'pt' ? 'Faixa:' : 'Range:'} {pricingModel[plan.id as keyof typeof pricingModel].ranges[currency]}
+                  </p>
                   <p className="text-[#f0f0ff]/50 text-sm leading-relaxed">{plan.pitch}</p>
                 </div>
 
@@ -77,7 +158,7 @@ export const Plans = () => {
 
                 <div className="space-y-3">
                   <LinkButton
-                    href={`/checkout?plan=${plan.id}`}
+                    href={`/checkout?plan=${plan.id}&currency=${currency}`}
                     variant={isPopular ? 'primary' : 'outline'}
                     size="md"
                     className="w-full justify-center"

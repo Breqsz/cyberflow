@@ -10,9 +10,15 @@ const anchors = ['#how-it-works', '#services', '#work', '#pricing'];
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { lang, toggle } = useLang();
+  const { lang, toggle, currency, setCurrency } = useLang();
 
   const links = tArr(content.nav.links, lang);
+  const currencies = [
+    { id: 'USD', label: '$' },
+    { id: 'EUR', label: '€' },
+    { id: 'GBP', label: '£' },
+    { id: 'BRL', label: 'R$' },
+  ] as const;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -60,6 +66,22 @@ export const Navbar = () => {
           >
             {lang === 'en' ? 'PT' : 'EN'}
           </button>
+          <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-[#0d0d1a]/60 p-1">
+            {currencies.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setCurrency(item.id)}
+                className={`text-[11px] font-mono px-2 py-1 rounded-md transition-all ${
+                  currency === item.id
+                    ? 'bg-[#6c3aff] text-white'
+                    : 'text-[#f0f0ff]/55 hover:text-[#f0f0ff] hover:bg-white/5'
+                }`}
+                aria-label={`Select ${item.id}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
           <LinkButton href="#contact" variant="primary" size="sm">
             {t(content.nav.cta, lang)}
           </LinkButton>
@@ -67,6 +89,22 @@ export const Navbar = () => {
 
         {/* mobile toggle */}
         <div className="md:hidden flex items-center gap-3">
+          <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-[#0d0d1a]/60 p-1">
+            {currencies.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setCurrency(item.id)}
+                className={`text-[10px] font-mono px-1.5 py-1 rounded transition-all ${
+                  currency === item.id
+                    ? 'bg-[#6c3aff] text-white'
+                    : 'text-[#f0f0ff]/55 hover:text-[#f0f0ff] hover:bg-white/5'
+                }`}
+                aria-label={`Select ${item.id}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
           <button
             onClick={toggle}
             className="text-xs font-mono px-2.5 py-1 rounded border border-white/10 text-[#f0f0ff]/50"
