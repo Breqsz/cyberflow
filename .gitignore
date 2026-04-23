@@ -41,6 +41,9 @@ yarn-error.log*
 # claude
 .claude/
 
+# cursor IDE
+.cursor/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

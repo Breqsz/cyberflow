@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { LinkButton } from './Button';
 import { useLang } from '@/components/providers/LanguageProvider';
 import { content, t, tArr } from '@/lib/i18n/content';
@@ -36,12 +37,12 @@ export const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* logo */}
-        <a href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <span className="text-xl font-bold tracking-tight text-white">
             Cyber<span className="text-[#6c3aff]">Flow</span>
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-[#00d4ff] animate-pulse" />
-        </a>
+        </Link>
 
         {/* desktop nav */}
         <ul className="hidden md:flex items-center gap-8">

@@ -4,6 +4,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
   --color-primary: var(--primary);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
@@ -13,7 +14,9 @@
 
 :root {
   --background: #050510;
+  --background-alt: #06061a;
   --surface: #0d0d1a;
+  --surface-alt: #10101f;
   --primary: #6c3aff;
   --accent: #00d4ff;
   --foreground: #f0f0ff;
@@ -34,6 +37,19 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Premium grain overlay — the subtle texture that separates "dark mode" from "premium dark mode" */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
 }
 
 ::selection {
@@ -50,4 +66,40 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 3px;
+}
+
+/* Utility: section alt background for rhythm between sections */
+.section-alt {
+  background-color: var(--background-alt);
+}
+
+/* Premium focus ring */
+*:focus-visible {
+  outline: 2px solid rgba(108, 58, 255, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth fade-in for content when JS hydrates */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Pulse for success state */
+@keyframes pulse-accent {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(0, 212, 255, 0);
+  }
+}
+
+.animate-pulse-accent {
+  animation: pulse-accent 2s ease-in-out infinite;
 }

@@ -15,12 +15,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CyberFlow — Digital Infrastructure That Converts",
-  description: "CyberFlow builds the digital systems that turn visitors into paying customers — websites, funnels, AI chat, CRM integrations, and scalable infrastructure.",
+  title: "CyberFlow — The conversion machine behind your brand",
+  description:
+    "We build pages that rank, funnels that close, and systems that work while you sleep. 2 SaaS live · 14 pages shipped · 0 projects abandoned.",
   openGraph: {
-    title: "CyberFlow — Digital Infrastructure That Converts",
-    description: "Websites, funnels, AI chat, and scalable digital infrastructure for growing businesses.",
+    title: "CyberFlow — The conversion machine behind your brand",
+    description:
+      "We build pages that rank, funnels that close, and systems that work while you sleep.",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CyberFlow — The conversion machine behind your brand",
+    description:
+      "Pages that rank, funnels that close, and systems that work while you sleep.",
   },
 };
 

@@ -1,10 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { Star } from 'lucide-react';
 import { LinkButton } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { useLang } from '@/components/providers/LanguageProvider';
-import { content, t, tArr } from '@/lib/i18n/content';
+import { content, t, tArr, tObj } from '@/lib/i18n/content';
 
 const Beams = dynamic(() => import('@/components/background/Beams'), { ssr: false });
 
@@ -12,6 +13,7 @@ export const Hero = () => {
   const { lang } = useLang();
   const c = content.hero;
   const trust = tArr(c.trust, lang);
+  const testimonial = tObj(c.testimonial, lang);
   const [line1, line2] = t(c.headline, lang).split('\n');
 
   return (
@@ -31,7 +33,10 @@ export const Hero = () => {
       </div>
 
       {/* dark overlay */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#050510]/70 via-[#050510]/40 to-[#050510]/85" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#050510]/75 via-[#050510]/45 to-[#050510]/90" />
+
+      {/* ambient glow behind headline */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[420px] rounded-full bg-[#6c3aff]/12 blur-[120px] pointer-events-none z-[1]" />
 
       {/* grid pattern */}
       <div
@@ -58,8 +63,12 @@ export const Hero = () => {
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl text-[#f0f0ff]/55 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+        <p className="text-xl md:text-2xl text-[#f0f0ff]/65 max-w-2xl mx-auto mb-4 leading-relaxed font-light">
           {t(c.sub, lang)}
+        </p>
+
+        <p className="text-sm text-[#f0f0ff]/40 mb-10 font-mono">
+          {t(c.micro, lang)}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -71,8 +80,23 @@ export const Hero = () => {
           </LinkButton>
         </div>
 
+        {/* testimonial strip */}
+        <div className="mt-12 flex justify-center">
+          <div className="flex items-center gap-3 bg-white/[0.03] border border-white/8 rounded-full px-5 py-2.5 backdrop-blur-sm">
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3.5 h-3.5 fill-[#00d4ff] text-[#00d4ff]" />
+              ))}
+            </div>
+            <p className="text-sm text-[#f0f0ff]/75">
+              &ldquo;{testimonial.quote}&rdquo;
+              <span className="text-[#f0f0ff]/40 ml-1.5">— {testimonial.author}</span>
+            </p>
+          </div>
+        </div>
+
         {/* trust signals */}
-        <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-[#f0f0ff]/35">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-[#f0f0ff]/60">
           {trust.map((item, i) => (
             <span key={i} className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00d4ff]" />
@@ -82,11 +106,11 @@ export const Hero = () => {
         </div>
 
         {/* tech stack strip */}
-        <div className="mt-12 flex items-center justify-center gap-3 flex-wrap">
+        <div className="mt-10 flex items-center justify-center gap-3 flex-wrap">
           {['Next.js', 'TypeScript', 'Supabase', 'Stripe', 'OpenAI', 'Vercel'].map((tech) => (
             <span
               key={tech}
-              className="text-xs font-mono px-3 py-1.5 rounded-full bg-white/5 border border-white/8 text-[#f0f0ff]/40"
+              className="text-xs font-mono px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#f0f0ff]/55"
             >
               {tech}
             </span>

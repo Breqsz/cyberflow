@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 
@@ -22,9 +23,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#050510] flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="/" className="inline-block text-xl font-bold text-white mb-4">
+          <Link href="/" className="inline-block text-xl font-bold text-white mb-4">
             Cyber<span className="text-[#6c3aff]">Flow</span>
-          </a>
+          </Link>
           <h1 className="text-2xl font-bold text-white mb-2">Área do cliente</h1>
           <p className="text-[#f0f0ff]/50 text-sm">Acesse com seu email para continuar.</p>
         </div>
@@ -57,7 +58,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-[#f0f0ff]/20 text-xs mt-6">
-          Não tem conta? <a href="/#plans" className="text-[#6c3aff] hover:underline">Escolha um plano</a>
+          Não tem conta? <Link href="/#pricing" className="text-[#6c3aff] hover:underline">Escolha um plano</Link>
         </p>
       </div>
     </div>
