@@ -546,6 +546,79 @@ export const content = {
     },
     copy: { en: 'All rights reserved.', pt: 'Todos os direitos reservados.' },
   },
+
+  dashboard: {
+    overview: {
+      title: { en: 'Overview', pt: 'Visão Geral' },
+      greeting: { en: 'Hello', pt: 'Olá' },
+      plan: { en: 'Current plan', pt: 'Plano atual' },
+      status: { en: 'Status', pt: 'Status' },
+      memberSince: { en: 'Member since', pt: 'Membro desde' },
+      projectStatus: { en: 'Project progress', pt: 'Progresso do projeto' },
+    },
+    nav: {
+      overview: { en: 'Overview', pt: 'Visão Geral' },
+      progress: { en: 'Progress', pt: 'Progresso' },
+      invoices: { en: 'Invoices', pt: 'Faturas' },
+      messages: { en: 'Messages', pt: 'Mensagens' },
+      profile: { en: 'Profile', pt: 'Perfil' },
+      logout: { en: 'Log out', pt: 'Sair' },
+    },
+    progress: {
+      title: { en: 'Project progress', pt: 'Progresso do projeto' },
+      note: { en: 'Team note', pt: 'Nota da equipe' },
+      stages: {
+        briefing: { en: 'Briefing', pt: 'Briefing' },
+        design: { en: 'Design', pt: 'Design' },
+        development: { en: 'Development', pt: 'Desenvolvimento' },
+        review: { en: 'Review', pt: 'Revisão' },
+        delivered: { en: 'Delivered', pt: 'Entregue' },
+      },
+      empty: { en: 'No project started yet.', pt: 'Nenhum projeto iniciado ainda.' },
+    },
+    invoices: {
+      title: { en: 'Invoices', pt: 'Faturas' },
+      date: { en: 'Date', pt: 'Data' },
+      amount: { en: 'Amount', pt: 'Valor' },
+      status: { en: 'Status', pt: 'Status' },
+      pdf: { en: 'PDF', pt: 'PDF' },
+      paid: { en: 'Paid', pt: 'Pago' },
+      open: { en: 'Pending', pt: 'Pendente' },
+      uncollectible: { en: 'Overdue', pt: 'Vencido' },
+      empty: { en: 'No invoices yet.', pt: 'Nenhuma fatura ainda.' },
+      noStripe: { en: 'Billing not configured yet. Contact us.', pt: 'Faturamento ainda não configurado. Entre em contato.' },
+    },
+    messages: {
+      title: { en: 'Messages', pt: 'Mensagens' },
+      subtitle: { en: 'Direct communication with the CyberFlow team.', pt: 'Comunicação direta com a equipe CyberFlow.' },
+      placeholder: { en: 'Write your message…', pt: 'Escreva sua mensagem…' },
+      send: { en: 'Send', pt: 'Enviar' },
+      teamLabel: { en: 'CyberFlow', pt: 'CyberFlow' },
+      youLabel: { en: 'You', pt: 'Você' },
+      empty: { en: 'No messages yet. Send us a message!', pt: 'Nenhuma mensagem ainda. Nos envie uma mensagem!' },
+    },
+    profile: {
+      title: { en: 'Profile', pt: 'Perfil' },
+      subtitle: { en: 'Update your contact information.', pt: 'Atualize suas informações de contato.' },
+      name: { en: 'Full name', pt: 'Nome completo' },
+      company: { en: 'Company name', pt: 'Nome da empresa' },
+      email: { en: 'Email', pt: 'Email' },
+      phone: { en: 'Phone', pt: 'Telefone' },
+      country: { en: 'Country', pt: 'País' },
+      save: { en: 'Save changes', pt: 'Salvar alterações' },
+      saved: { en: 'Saved!', pt: 'Salvo!' },
+      saving: { en: 'Saving…', pt: 'Salvando…' },
+    },
+  },
+
+  cookie: {
+    message: {
+      en: 'We use cookies to improve your experience. By continuing, you agree to our Privacy Policy.',
+      pt: 'Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa Política de Privacidade.',
+    },
+    accept: { en: 'Accept cookies', pt: 'Aceitar cookies' },
+    decline: { en: 'Decline', pt: 'Recusar' },
+  },
 };
 
 export const t = (obj: { en: string; pt: string }, lang: Lang): string => obj[lang];
