@@ -7,6 +7,7 @@ export const content = {
       pt: ['Como funciona', 'Serviços', 'Projetos', 'Planos'],
     },
     cta: { en: 'Get a free audit', pt: 'Auditoria gratuita' },
+    clientArea: { en: 'Client area', pt: 'Área do Cliente' },
   },
 
   hero: {

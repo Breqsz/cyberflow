@@ -83,6 +83,9 @@ export const Navbar = () => {
               </button>
             ))}
           </div>
+          <LinkButton href="/login" variant="outline" size="sm">
+            {t(content.nav.clientArea, lang)}
+          </LinkButton>
           <LinkButton href="#contact" variant="primary" size="sm">
             {t(content.nav.cta, lang)}
           </LinkButton>
@@ -140,6 +143,9 @@ export const Navbar = () => {
             </a>
           ))}
           <div className="pt-3">
+            <LinkButton href="/login" variant="outline" size="sm" className="w-full justify-center mb-2">
+              {t(content.nav.clientArea, lang)}
+            </LinkButton>
             <LinkButton href="#contact" variant="primary" size="sm" className="w-full justify-center">
               {t(content.nav.cta, lang)}
             </LinkButton>

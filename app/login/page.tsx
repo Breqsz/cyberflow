@@ -1,46 +1,114 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import SpotlightCard from '@/components/ui/effects/SpotlightCard';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getSession();
+      if (data.session) router.replace('/dashboard');
+    };
+    void checkSession();
+  }, [router]);
+
+  const getRedirectTo = () => `${window.location.origin}/auth/callback?next=/onboarding`;
+
+  const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
     const supabase = createClient();
-    await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/dashboard` } });
-    setSent(true);
+    const { error: signInError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: getRedirectTo(),
+      },
+    });
+    if (signInError) {
+      setError(signInError.message);
+    } else {
+      setSent(true);
+    }
     setLoading(false);
   };
 
-  return (
-    <div className="min-h-screen bg-[#050510] flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-block text-xl font-bold text-white mb-4">
-            Cyber<span className="text-[#6c3aff]">Flow</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-white mb-2">Área do cliente</h1>
-          <p className="text-[#f0f0ff]/50 text-sm">Acesse com seu email para continuar.</p>
-        </div>
+  const handleGoogle = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    const supabase = createClient();
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: getRedirectTo(),
+      },
+    });
+    if (oauthError) {
+      setError(oauthError.message);
+      setGoogleLoading(false);
+    }
+  };
 
-        <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-8">
+  return (
+    <div className="min-h-screen bg-[#050510] flex items-center justify-center px-6 py-8">
+      <div className="w-full max-w-md">
+        <SpotlightCard className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-8" spotlightColor="rgba(108,58,255,0.30)">
+          <div className="text-center mb-6">
+            <Badge variant="surface" className="mb-4">
+              Área do Cliente
+            </Badge>
+            <Link href="/" className="inline-block text-2xl font-bold text-white mb-3">
+              Cyber<span className="text-[#6c3aff]">Flow</span>
+            </Link>
+            <h1 className="text-xl font-bold text-white mb-2">Acesse sua conta com segurança</h1>
+            <p className="text-[#f0f0ff]/55 text-sm">
+              Entre com Google ou receba um link de acesso no seu e-mail.
+            </p>
+          </div>
+
+          <div className="space-y-3 mb-5">
+            <Button
+              type="button"
+              variant="outline"
+              size="md"
+              className="w-full justify-center"
+              onClick={handleGoogle}
+              disabled={googleLoading}
+            >
+              {googleLoading ? 'Redirecionando...' : 'Continuar com Google'}
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="h-px bg-white/10 flex-1" />
+            <span className="text-xs uppercase tracking-wider text-[#f0f0ff]/40">ou por e-mail</span>
+            <div className="h-px bg-white/10 flex-1" />
+          </div>
+
           {sent ? (
-            <div className="text-center">
-              <div className="text-4xl mb-4">📧</div>
-              <p className="text-white font-semibold mb-2">Link enviado!</p>
-              <p className="text-[#f0f0ff]/50 text-sm">Verifique seu email para acessar sua conta.</p>
+            <div className="text-center rounded-xl border border-[#6c3aff]/25 bg-[#6c3aff]/8 p-4">
+              <p className="text-white font-semibold mb-2">Link enviado</p>
+              <p className="text-[#f0f0ff]/65 text-sm">
+                Confira sua caixa de entrada e clique no botão do e-mail para concluir o acesso.
+              </p>
             </div>
           ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleMagicLink} className="space-y-4">
               <div>
-                <label className="block text-sm text-[#f0f0ff]/50 mb-1.5">Email</label>
+                <label className="block text-sm text-[#f0f0ff]/55 mb-1.5">E-mail</label>
                 <input
                   type="email"
                   required
@@ -51,15 +119,26 @@ export default function LoginPage() {
                 />
               </div>
               <Button type="submit" variant="primary" size="md" className="w-full justify-center" disabled={loading}>
-                {loading ? 'Enviando...' : 'Entrar com email →'}
+                {loading ? 'Enviando link...' : 'Receber link de acesso'}
               </Button>
             </form>
           )}
-        </div>
 
-        <p className="text-center text-[#f0f0ff]/20 text-xs mt-6">
-          Não tem conta? <Link href="/#pricing" className="text-[#6c3aff] hover:underline">Escolha um plano</Link>
-        </p>
+          {error && (
+            <p className="mt-4 text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <div className="mt-6 space-y-2 text-center">
+            <p className="text-[#f0f0ff]/25 text-xs">
+              Não tem conta? <Link href="/#pricing" className="text-[#6c3aff] hover:underline">Escolha um plano</Link>
+            </p>
+            <p className="text-[#f0f0ff]/25 text-xs">
+              Ao continuar, você receberá um token seguro por e-mail para validar o acesso.
+            </p>
+          </div>
+        </SpotlightCard>
       </div>
     </div>
   );
