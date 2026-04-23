@@ -1,0 +1,28 @@
+<h2 style="margin:0 0 16px;font-family:Arial,sans-serif;color:#111827;">CyberFlow - Confirme seu cadastro</h2>
+
+<p style="margin:0 0 12px;font-family:Arial,sans-serif;color:#111827;">
+  <strong>PT-BR:</strong> Bem-vindo! Clique no botao abaixo para ativar sua conta.
+</p>
+<p style="margin:0 0 20px;font-family:Arial,sans-serif;color:#4b5563;">
+  Se voce nao criou esta conta, ignore este e-mail.
+</p>
+
+<p style="margin:0 0 12px;font-family:Arial,sans-serif;color:#111827;">
+  <strong>EN:</strong> Welcome! Click the button below to activate your account.
+</p>
+<p style="margin:0 0 20px;font-family:Arial,sans-serif;color:#4b5563;">
+  If you did not create this account, you can safely ignore this email.
+</p>
+
+<p style="margin:0 0 24px;">
+  <a
+    href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup&next=/onboarding"
+    style="display:inline-block;padding:12px 18px;border-radius:8px;background:#6c3aff;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-weight:600;"
+  >
+    Ativar conta / Activate account
+  </a>
+</p>
+
+<p style="margin:0;font-family:Arial,sans-serif;color:#6b7280;font-size:12px;">
+  Este link expira em 24 horas. / This link expires in 24 hours.
+</p>

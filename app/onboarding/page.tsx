@@ -17,11 +17,19 @@ export default async function OnboardingPage() {
 
   const [{ data: existingCustomer }, { data: profile }] = await Promise.all([
     supabase.from('customers').select('id, plan, status').eq('id', user.id).single(),
-    supabase.from('profiles').select('email').eq('id', user.id).single(),
+    supabase.from('profiles').select('email, name').eq('id', user.id).single(),
   ]);
 
-  if (user.email && profile?.email !== user.email) {
-    await supabase.from('profiles').update({ email: user.email }).eq('id', user.id);
+  const metadataName =
+    (user.user_metadata as { name?: string; full_name?: string } | null)?.name ??
+    (user.user_metadata as { full_name?: string } | null)?.full_name ??
+    null;
+
+  const updates: Record<string, string> = {};
+  if (user.email && profile?.email !== user.email) updates.email = user.email;
+  if (metadataName && !profile?.name) updates.name = metadataName;
+  if (Object.keys(updates).length > 0) {
+    await supabase.from('profiles').update(updates).eq('id', user.id);
   }
 
   if (!existingCustomer) {
@@ -33,7 +41,7 @@ export default async function OnboardingPage() {
   }
 
   const customer = existingCustomer ?? { plan: null as string | null, status: 'pending' as string };
-  const accountEmail = user.email ?? profile?.email ?? 'email nÃ£o disponÃ­vel';
+  const accountEmail = user.email ?? profile?.email ?? 'e-mail não disponível';
   const resolvedPlan = customer.plan ? PLAN_LABELS[customer.plan] ?? customer.plan : null;
 
   return (
@@ -43,7 +51,7 @@ export default async function OnboardingPage() {
           <p className="text-xs uppercase tracking-widest text-[#6c3aff] mb-2">Onboarding</p>
           <h1 className="text-3xl font-bold text-white mb-2">Conta autenticada com sucesso</h1>
           <p className="text-[#f0f0ff]/55 mb-8">
-            Identificamos sua conta por e-mail e carregamos o nÃ­vel de acesso com base no seu plano atual.
+            Identificamos sua conta por e-mail e carregamos o nível de acesso com base no seu plano atual.
           </p>
 
           <div className="grid gap-4 md:grid-cols-2 mb-8">
@@ -52,7 +60,7 @@ export default async function OnboardingPage() {
               <p className="text-sm font-semibold break-all">{accountEmail}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-[#050510] p-4">
-              <p className="text-xs text-[#f0f0ff]/45 mb-1">NÃ­vel da conta (plano)</p>
+              <p className="text-xs text-[#f0f0ff]/45 mb-1">Nível da conta (plano)</p>
               <p className="text-sm font-semibold">
                 {resolvedPlan ?? 'Sem plano ativo'}
               </p>
