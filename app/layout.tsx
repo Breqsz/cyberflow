@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Geist_Mono } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         <LanguageProvider>
           {children}
+          <CookieBanner />
         </LanguageProvider>
       </body>
     </html>
