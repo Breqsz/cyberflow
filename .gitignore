@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+.superpowers/
 
 # production
 /build
@@ -47,3 +48,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
