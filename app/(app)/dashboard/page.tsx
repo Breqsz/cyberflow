@@ -1,48 +1,96 @@
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
+
+const STAGE_ORDER = ['briefing', 'design', 'development', 'review', 'delivered'];
 
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const { data: customer } = await supabase
-    .from('customers')
-    .select('*')
-    .eq('id', user?.id)
-    .single();
+
+  const [{ data: customer }, { data: project }] = await Promise.all([
+    supabase.from('customers').select('plan, status, created_at').eq('id', user!.id).single(),
+    supabase.from('projects').select('current_stage').eq('customer_id', user!.id).single(),
+  ]);
+
+  const memberSince = customer?.created_at
+    ? new Date(customer.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    : '—';
+
+  const stageIndex = project ? STAGE_ORDER.indexOf(project.current_stage) : -1;
+  const progress = stageIndex >= 0 ? Math.round(((stageIndex + 1) / STAGE_ORDER.length) * 100) : 0;
+
+  const stagesLabels: Record<string, string> = {
+    briefing: 'Briefing',
+    design: 'Design',
+    development: 'Desenvolvimento',
+    review: 'Revisão',
+    delivered: 'Entregue',
+  };
 
   return (
-    <div className="min-h-screen bg-[#050510] text-[#f0f0ff] p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-1">Olá, {user?.email?.split('@')[0]}</h1>
-          <p className="text-[#f0f0ff]/50">Bem-vindo à área do cliente CyberFlow.</p>
-        </div>
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white mb-1">Visão Geral</h1>
+        <p className="text-[#f0f0ff]/50">Bem-vindo à sua área do cliente CyberFlow.</p>
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-6">
-            <p className="text-[#f0f0ff]/40 text-sm mb-1">Plano atual</p>
-            <p className="text-2xl font-bold text-[#6c3aff] capitalize">{customer?.plan ?? '—'}</p>
-          </div>
-          <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-6">
-            <p className="text-[#f0f0ff]/40 text-sm mb-1">Status</p>
-            <p className="text-2xl font-bold text-[#00d4ff] capitalize">{customer?.status ?? '—'}</p>
-          </div>
-          <div className="bg-[#0d0d1a] border border-white/5 rounded-2xl p-6">
-            <p className="text-[#f0f0ff]/40 text-sm mb-1">Membro desde</p>
-            <p className="text-2xl font-bold text-white">
-              {customer?.created_at
-                ? new Date(customer.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
-                : '—'}
-            </p>
-          </div>
+      <div className="grid md:grid-cols-3 gap-5 mb-6">
+        <div className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl p-5">
+          <p className="text-[#f0f0ff]/40 text-xs mb-1.5">Plano atual</p>
+          <p className="text-2xl font-bold text-[#6c3aff] capitalize">{customer?.plan ?? '—'}</p>
         </div>
+        <div className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl p-5">
+          <p className="text-[#f0f0ff]/40 text-xs mb-1.5">Status</p>
+          <p className="text-2xl font-bold text-[#00d4ff] capitalize">{customer?.status ?? '—'}</p>
+        </div>
+        <div className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl p-5">
+          <p className="text-[#f0f0ff]/40 text-xs mb-1.5">Membro desde</p>
+          <p className="text-2xl font-bold text-white">{memberSince}</p>
+        </div>
+      </div>
 
-        <div className="bg-[#0d0d1a] border border-[#6c3aff]/20 rounded-2xl p-8 text-center">
+      {project ? (
+        <Link href="/dashboard/progress" className="block bg-[#0d0d1a] border border-[#6c3aff]/20 rounded-2xl p-6 mb-6 hover:border-[#6c3aff]/40 transition-colors">
+          <div className="flex justify-between items-center mb-3">
+            <p className="text-sm font-semibold text-white">Progresso do projeto</p>
+            <p className="text-xs text-[#6c3aff]">Ver detalhes →</p>
+          </div>
+          <div className="bg-[#111124] rounded-full h-2 mb-2">
+            <div
+              className="bg-gradient-to-r from-[#6c3aff] to-[#00d4ff] h-2 rounded-full transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-xs text-[#f0f0ff]/40">
+            Etapa atual: <span className="text-[#00d4ff]">{stagesLabels[project.current_stage] ?? project.current_stage}</span>
+          </p>
+        </Link>
+      ) : (
+        <div className="bg-[#0d0d1a] border border-[#6c3aff]/20 rounded-2xl p-8 text-center mb-6">
           <div className="text-4xl mb-3">🚀</div>
-          <h2 className="text-xl font-semibold text-white mb-2">Seu projeto está em andamento</h2>
+          <h2 className="text-xl font-semibold text-white mb-2">Seu projeto será iniciado em breve</h2>
           <p className="text-[#f0f0ff]/50 max-w-md mx-auto">
             Em breve você terá acesso a relatórios, atualizações e comunicação direta com a equipe CyberFlow.
           </p>
         </div>
+      )}
+
+      <div className="grid md:grid-cols-3 gap-4">
+        {[
+          { href: '/dashboard/invoices', icon: '💳', label: 'Ver faturas' },
+          { href: '/dashboard/messages', icon: '💬', label: 'Mensagens' },
+          { href: '/dashboard/profile', icon: '⚙️', label: 'Editar perfil' },
+        ].map(({ href, icon, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className="flex items-center gap-3 bg-[#0d0d1a] border border-white/[0.05] rounded-xl p-4 hover:border-[#6c3aff]/30 transition-colors"
+          >
+            <span className="text-xl">{icon}</span>
+            <span className="text-sm font-medium text-[#f0f0ff]/70">{label}</span>
+            <span className="ml-auto text-[#6c3aff]">→</span>
+          </Link>
+        ))}
       </div>
     </div>
   );
